@@ -1,14 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult, Context,
+  Handler
+} from "aws-lambda";
+import { EventService } from './services/event.service';
 
-(async () => {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
-  await app.listen(process.env.PORT ?? 3000);
-})();
+export const omnapihandler: Handler = async (
+  event: APIGatewayProxyEvent,
+  _context: Context
+): Promise<APIGatewayProxyResult> => {
+  const appContext = await NestFactory.createApplicationContext(AppModule);
+  const eventsService = appContext.get(EventService);
+  return eventsService.process(event);
+};

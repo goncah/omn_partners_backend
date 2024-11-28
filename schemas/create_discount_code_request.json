@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateDiscountRequest",
+  "description": "Create a Discount Code Request Schema",
+  "required": [
+    "code",
+    "validUntil",
+    "factor"
+  ],
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "The discount code id.",
+      "minLength": 5,
+      "maxLength": 255
+    },
+    "validUnitl": {
+      "description": "Until when the discount code should be valid. Expected format is ISO 8601 with offset. Example: 2024-11-29T04:21:29+01:00",
+      "$ref": "#/definitions/ISODate"
+    },
+    "factor": {
+      "description": "The percentage discount to apply to an order.",
+      "$ref": "#/definitions/Factor"
+    }
+  },
+  "definitions": {
+    "Factor": {
+      "type": "number",
+      "minimum": 0.0,
+      "exclusiveMinimum": true,
+      "maximum": 0.15,
+      "exclusiveMaximum": false
+    },
+    "ISODate": {
+      "type": "string",
+      "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\+\\d\\d:\\d\\d$"
+    }
+  }
+}
